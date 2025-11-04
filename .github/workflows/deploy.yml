@@ -1,0 +1,37 @@
+name: 🚀 Deploy Website ke Niagahoster
+
+# Pemicu (Trigger)
+# Alur kerja ini akan berjalan setiap kali ada 'push' ke branch 'main'
+on:
+  push:
+    branches: [ "main" ]
+
+# Pekerjaan (Jobs) yang harus dilakukan
+jobs:
+  ftp-deploy:
+    runs-on: ubuntu-latest
+
+    # Langkah-langkah yang akan dieksekusi
+    steps:
+    # 1. Checkout Kode
+    - name: 📦 Checkout repository
+      uses: actions/checkout@v4
+
+    # 2. Deploy FTP
+    - name: 🚚 Deploy ke Niagahoster via FTP
+      uses: SamKirkland/FTP-Deploy-Action@v4.3.4
+      with:
+        # Kredensial server dari GitHub Secrets
+        server: ${{ secrets.FTP_SERVER }}
+        username: ${{ secrets.FTP_USERNAME }}
+        password: ${{ secrets.FTP_PASSWORD }}
+        port: 21
+        
+        # Direktori LOKAL (di repo GitHub) yang ingin Anda upload
+        local-dir: ./ 
+
+        # Direktori TUJUAN (di server Niagahoster)
+        server-dir: /public_html/
+        
+        # Opsi tambahan:
+        # 'dangerous-clean-slate: true' akan menghapus file lama di server
